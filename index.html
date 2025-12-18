@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사람인 Project 10 : AI 미니 해커톤</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Apply Font Globally */
+        * {
+            font-family: 'Noto Sans KR', sans-serif !important;
+        }
+
+        .font-mono {
+            font-family: 'Courier New', Courier, monospace !important;
+        }
+
+        /* Firework Particles */
+        .firework-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background-color: black;
+            border-radius: 0;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 0;
+        }
+    </style>
+</head>
+
+<body
+    class="min-h-screen bg-[#E0E0E0] p-4 sm:p-8 flex flex-col items-center justify-center relative overflow-y-auto text-black">
+
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none"
+        style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 4px 4px;">
+    </div>
+
+    <!-- Firework Container -->
+    <div id="fireworks-container" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+    <!-- Top Menu Bar -->
+    <div
+        class="fixed top-0 left-0 right-0 h-8 bg-white border-b-2 border-black flex items-center px-4 justify-between z-50 shadow-sm">
+        <div class="flex space-x-6 text-sm font-bold tracking-tight">
+            <span class="cursor-pointer hover:underline" onclick="switchView('home')"> System</span>
+            <span class="cursor-pointer hover:underline" onclick="switchView('board')">File</span>
+            <span class="cursor-pointer hover:underline">Edit</span>
+            <span class="cursor-pointer hover:underline">View</span>
+            <span class="cursor-pointer hover:underline">Special</span>
+        </div>
+        <div class="text-sm font-mono" id="clock">
+            <!-- Time will be injected here -->
+        </div>
+    </div>
+
+    <!-- Main Window Container -->
+    <div id="main-container" class="w-full max-w-3xl mt-12 mb-12 relative z-10">
+
+        <!-- VIEW: HOME -->
+        <div id="view-home" class="animate-in fade-in zoom-in duration-500">
+            <div class="w-full bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+
+                <!-- Window Title Bar -->
+                <div class="h-10 border-b-2 border-black flex items-center justify-between px-2 select-none"
+                    style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqgABWA04dcBUgNQCoQAAP2sQwtodHs8AAAAASUVORK5CYII=')">
+                    <!-- Left: Spacer/Icon -->
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 border border-black bg-white shadow-[1px_1px_0_0_#000] ml-1"></div>
+                    </div>
+
+                    <!-- Center: Title -->
+                    <span
+                        class="font-bold bg-white px-4 border border-black text-sm uppercase tracking-wider absolute left-1/2 transform -translate-x-1/2">Project
+                        10.exe</span>
+
+                    <!-- Right: Window Controls -->
+                    <div class="flex items-center space-x-1 mr-1">
+                        <div
+                            class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
+                            <i data-lucide="minus" class="w-3 h-3"></i>
+                        </div>
+                        <div
+                            class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
+                            <i data-lucide="square" class="w-3 h-3"></i>
+                        </div>
+                        <div
+                            class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
+                            <i data-lucide="x" class="w-3 h-3"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Window Content -->
+                <div class="p-6 sm:p-10 flex flex-col items-center text-center">
+
+                    <!-- Header Section -->
+                    <div class="mb-8 space-y-4">
+                        <!-- Title: Solid Black 10 -->
+                        <h1 class="text-4xl sm:text-6xl font-black tracking-tighter leading-none mb-2">
+                            PROJECT <span>10</span>
+                        </h1>
+                        <div class="w-full h-1 bg-black mb-4"></div>
+
+                        <!-- Typing Animation Title -->
+                        <h2 class="text-xl sm:text-2xl font-bold font-mono h-8">
+                            <span id="typed-title"></span>
+                            <span class="inline-block w-2 h-5 bg-black ml-1 animate-pulse align-middle"></span>
+                        </h2>
+
+                        <p class="text-sm sm:text-base text-gray-600 mt-2 font-mono">
+                            (부제 : AI와 함께라면 두렵지 않아...★)
+                        </p>
+                    </div>
+
+                    <!-- Overview Text -->
+                    <div
+                        class="w-full bg-[#F2F2F2] border border-black p-6 mb-8 text-left shadow-[4px_4px_0_0_#000] relative">
+                        <div
+                            class="absolute top-0 left-0 bg-black text-white text-xs px-2 py-1 font-mono transform -translate-y-1/2 ml-4">
+                            SYSTEM MESSAGE
+                        </div>
+                        <div class="text-sm sm:text-lg leading-relaxed font-medium text-gray-800 font-mono space-y-4">
+                            <p>
+                                사람인은 <span class="font-bold">Project 10</span>이라는 이름 아래 전사적으로 AI 활용을 확산하고,
+                                일하는 방식을 혁신하여 <span class="bg-yellow-200 px-1 border-b-2 border-black">업무 효율을 10배</span>
+                                높여나가고자
+                                합니다.
+                            </p>
+                            <p>
+                                앞으로 Project 10이라는 메시지와 실행은 지속될 예정이며,
+                                AI를 적극 활용하고 성과를 내는 환경을 독려하고 지원할 것입니다.
+                            </p>
+                            <p class="font-bold">
+                                그 첫걸음을 위해 준비 중인 AI 확산 계획도 살짝 공유드립니다. 👀
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Accordion Section -->
+                    <div class="w-full space-y-4 text-left">
+
+                        <!-- Toggle 1: 해커톤 엿보기 -->
+                        <div class="w-full group">
+                            <button type="button"
+                                class="w-full bg-white border-2 border-black p-4 flex items-center justify-between shadow-[4px_4px_0_0_#000] hover:bg-black hover:text-white transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold text-lg"
+                                onclick="toggleAccordion('content-1', this)">
+                                <span class="flex items-center text-left">
+                                    <i data-lucide="folder-open" class="w-6 h-6 mr-3"></i>
+                                    전사 AI 미니 해커톤(1월 중)
+                                </span>
+                                <i data-lucide="chevron-down" class="w-6 h-6 transition-transform duration-200"></i>
+                            </button>
+                            <div id="content-1"
+                                class="hidden border-2 border-t-0 border-black bg-white animate-in slide-in-from-top-2 duration-200">
+                                <div
+                                    class="p-6 grid gap-6 text-left bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAACpJREFUKFNjZCASMDIwMKAoYqKSwTA2NqInJpgwI/7//z8DvnD4//8/IwA70hcL924sEwAAAABJRU5ErkJggg==')]">
+
+                                    <!-- Card 1 -->
+                                    <div class="bg-white border border-black p-4 shadow-[3px_3px_0_0_#000]">
+                                        <div class="flex items-center mb-2">
+                                            <i data-lucide="terminal" class="w-5 h-5 mr-2"></i>
+                                            <h3 class="text-lg font-bold border-b-2 border-black w-full pb-1">해커톤 개요
+                                            </h3>
+                                        </div>
+                                        <ul class="space-y-1 text-sm font-medium pl-1">
+                                            <li class="flex items-start"><span class="mr-2">▪</span> 주제 : 추후 공개</li>
+                                            <li class="flex items-start"><span class="mr-2">▪</span> 대상 : 사람인 임직원 누구나
+                                            </li>
+                                            <li class="flex items-start"><span class="mr-2">▪</span> 형식 : 1일 집중형 미니 해커톤
+                                            </li>
+                                            <li class="flex items-start"><span class="mr-2">▪</span> 시기 : 1월 중
+                                            </li>
+                                            <li class="flex items-start"><span class="mr-2">▪</span> 팀 구성 : 개인 또는
+                                                팀(2-3인)</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Card 2 -->
+                                    <div class="bg-white border border-black p-4 shadow-[3px_3px_0_0_#000]">
+                                        <div class="flex items-center mb-2">
+                                            <i data-lucide="award" class="w-5 h-5 mr-2"></i>
+                                            <h3 class="text-lg font-bold border-b-2 border-black w-full pb-1">포상 안내</h3>
+                                        </div>
+                                        <div class="space-y-2 pl-1">
+                                            <p class="font-bold text-base bg-black text-white inline-block px-2">TOTAL
+                                                상금 ---만원
+                                                상당</p>
+                                            <ul class="space-y-1 text-sm font-medium text-gray-700">
+                                                <li class="flex items-start"><span class="mr-2">▪</span> 상세 포상 방식 및 규모
+                                                    추후 안내 예정
+                                                </li>
+                                                <li class="flex items-start"><span class="mr-2">▪</span> 심사 기준 : AI 기술
+                                                    활용도 / 창의력 / 효율성 / 파급력 </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <!-- Card 3 -->
+                                    <div class="bg-white border border-black p-4 shadow-[3px_3px_0_0_#000]">
+                                        <div class="flex items-center mb-2">
+                                            <i data-lucide="zap" class="w-5 h-5 mr-2"></i>
+                                            <h3 class="text-lg font-bold border-b-2 border-black w-full pb-1">기타 안내</h3>
+                                        </div>
+                                        <p class="text-sm leading-relaxed pl-1 font-medium">
+                                            본 해커톤은 결과물의 완성도보다도 <span
+                                                class="bg-yellow-200 px-1 border-b-2 border-black">AI를 직접
+                                                활용해보고, 가능성을 전파</span>하는 것을 목표로 합니다. 직무와 무관하게 관심 있는 분들은 부담 없이 참여하여 주시기
+                                            바랍니다.
+                                        </p>
+                                    </div>
+
+                                    <div class="text-center pt-2">
+                                        <p class="font-mono text-base font-bold animate-pulse">상세 내용은 To be continued...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Toggle 2: AI 챔피온 -->
+                        <div class="w-full group">
+                            <button type="button"
+                                class="w-full bg-white border-2 border-black p-4 flex items-center justify-between shadow-[4px_4px_0_0_#000] hover:bg-black hover:text-white transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold text-lg"
+                                onclick="toggleAccordion('content-2', this)">
+                                <span class="flex items-center text-left">
+                                    <i data-lucide="trophy" class="w-6 h-6 mr-3"></i>
+                                    AI 챔피온(가칭) 선발(하반기)
+                                </span>
+                                <i data-lucide="chevron-down" class="w-6 h-6 transition-transform duration-200"></i>
+                            </button>
+                            <div id="content-2"
+                                class="hidden border-2 border-t-0 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
+                                <ul class="space-y-2 text-base font-medium">
+                                    <li>- AI 활용 및 문화 전파 우수 인재 선발 및 포상</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Toggle 3: AI 활용 강화 지원 -->
+                        <div class="w-full group">
+                            <button type="button"
+                                class="w-full bg-white border-2 border-black p-4 flex items-center justify-between shadow-[4px_4px_0_0_#000] hover:bg-black hover:text-white transition-all duration-200 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none font-bold text-lg"
+                                onclick="toggleAccordion('content-3', this)">
+                                <span class="flex items-center text-left">
+                                    <i data-lucide="rocket" class="w-6 h-6 mr-3"></i>
+                                    AI 활용 강화 지원(상시)
+                                </span>
+                                <i data-lucide="chevron-down" class="w-6 h-6 transition-transform duration-200"></i>
+                            </button>
+                            <div id="content-3"
+                                class="hidden border-2 border-t-0 border-black bg-white p-6 shadow-[4px_4px_0_0_#000]">
+                                <ul class="space-y-2 text-base font-medium">
+                                    <li>- AI 관련 사내 교육 진행</li>
+                                    <li>- 전사 AI 활용 문화 활성화</li>
+                                    <li>- 관련 툴/도구 적극 지원</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Footer Text -->
+                        <p class="text-sm font-mono text-gray-500 mt-2 text-left pl-1">
+                            ※ 각 내용의 상세 안내는 추후 개별 공지
+                        </p>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: BOARD (New) -->
+        <div id="view-board" class="hidden animate-in fade-in zoom-in duration-500">
+            <div class="w-full bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+
+                <!-- Window Title Bar -->
+                <div class="h-10 border-b-2 border-black flex items-center justify-between px-2 select-none"
+                    style="background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIklEQVQIW2NkQAKrVq36zwjjgzjwqgABWA04dcBUgNQCoQAAP2sQwtodHs8AAAAASUVORK5CYII=')">
+                    <!-- Left: Spacer/Icon -->
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 border border-black bg-white shadow-[1px_1px_0_0_#000] ml-1"></div>
+                    </div>
+
+                    <!-- Center: Title -->
+                    <span
+                        class="font-bold bg-white px-4 border border-black text-sm uppercase tracking-wider absolute left-1/2 transform -translate-x-1/2">
+                        Board.exe
+                    </span>
+
+                    <!-- Right: Window Controls -->
+                    <div class="flex items-center space-x-1 mr-1">
+                        <div
+                            class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
+                            <i data-lucide="minus" class="w-3 h-3"></i>
+                        </div>
+                        <div
+                            class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
+                            <i data-lucide="square" class="w-3 h-3"></i>
+                        </div>
+                        <div class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none"
+                            onclick="switchView('home')">
+                            <i data-lucide="x" class="w-3 h-3"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Window Content (Board Style) -->
+                <div class="p-6">
+                    <div class="flex justify-between items-end mb-4 border-b-4 border-black pb-2">
+                        <h2 class="text-3xl font-black tracking-tight">NOTICE BOARD</h2>
+                        <span class="font-mono text-sm font-bold bg-black text-white px-2 py-1">ADMIN MODE</span>
+                    </div>
+
+                    <!-- Filter / Search Mockup -->
+                    <div class="flex justify-between mb-4 font-mono text-sm">
+                        <div class="flex space-x-2">
+                            <select class="border-2 border-black p-1 bg-white outline-none focus:bg-yellow-100">
+                                <option>All Categories</option>
+                                <option>Notice</option>
+                                <option>Event</option>
+                            </select>
+                        </div>
+                        <div class="flex items-center border-b-2 border-black">
+                            <i data-lucide="search" class="w-4 h-4 mr-2"></i>
+                            <input type="text" placeholder="Search..."
+                                class="bg-transparent outline-none w-32 placeholder-gray-500">
+                        </div>
+                    </div>
+
+                    <!-- Board Table -->
+                    <div class="border-2 border-black bg-white">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-100 text-sm font-bold border-b-2 border-black">
+                                    <th class="p-3 w-16 text-center border-r-2 border-black">No.</th>
+                                    <th class="p-3 border-r-2 border-black">Subject</th>
+                                    <th class="p-3 w-24 text-center border-r-2 border-black">Author</th>
+                                    <th class="p-3 w-32 text-center whitespace-nowrap">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-sm font-medium font-mono">
+                                <tr class="border-b border-black hover:bg-yellow-50 cursor-pointer">
+                                    <td class="p-3 text-center border-r border-black">10</td>
+                                    <td class="p-3 border-r border-black font-bold">📢 [공지] 사람인 Project 10 해커톤 개최 안내
+                                    </td>
+                                    <td class="p-3 text-center border-r border-black">System</td>
+                                    <td class="p-3 text-center whitespace-nowrap">2025-01-15</td>
+                                </tr>
+                                <tr class="border-b border-black hover:bg-yellow-50 cursor-pointer">
+                                    <td class="p-3 text-center border-r border-black">9</td>
+                                    <td class="p-3 border-r border-black">준비 중입니다. </td>
+                                    <td class="p-3 text-center border-r border-black">Admin</td>
+                                    <td class="p-3 text-center whitespace-nowrap">2025-01-10</td>
+                                </tr>
+                                <tr class="border-b border-black hover:bg-yellow-50 cursor-pointer">
+                                    <td class="p-3 text-center border-r border-black">8</td>
+                                    <td class="p-3 border-r border-black">준비 중입니다. </td>
+                                    <td class="p-3 text-center border-r border-black">User01</td>
+                                    <td class="p-3 text-center whitespace-nowrap">2024-12-28</td>
+                                </tr>
+                                <tr class="border-b border-black hover:bg-yellow-50 cursor-pointer">
+                                    <td class="p-3 text-center border-r border-black">7</td>
+                                    <td class="p-3 border-r border-black">준비 중입니다. </td>
+                                    <td class="p-3 text-center border-r border-black">Support</td>
+                                    <td class="p-3 text-center whitespace-nowrap">2024-12-20</td>
+                                </tr>
+                                <tr class="border-b border-black hover:bg-yellow-50 cursor-pointer">
+                                    <td class="p-3 text-center border-r border-black">6</td>
+                                    <td class="p-3 border-r border-black">준비 중입니다. </td>
+                                    <td class="p-3 text-center border-r border-black">PM</td>
+                                    <td class="p-3 text-center whitespace-nowrap">2024-12-18</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-6 space-x-2 font-mono text-sm font-bold">
+                        <button
+                            class="w-8 h-8 border-2 border-black bg-black text-white flex items-center justify-center">1</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer / Logo Area (Clean Version) -->
+    <footer class="mt-8 text-center">
+        <div class="w-32 h-10 flex items-center justify-center p-1 mx-auto">
+            <img src="../saramin_bi_blue&grey_english.png" alt="saramin logo" class="w-full h-full object-contain">
+        </div>
+        <p class="mt-4 text-xs font-mono text-gray-500">© 2025 Saramin. Project 10.</p>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // View Switcher Logic
+        function switchView(viewName) {
+            const homeView = document.getElementById('view-home');
+            const boardView = document.getElementById('view-board');
+
+            if (viewName === 'board') {
+                homeView.classList.add('hidden');
+                boardView.classList.remove('hidden');
+            } else {
+                homeView.classList.remove('hidden');
+                boardView.classList.add('hidden');
+            }
+            // Re-initialize icons just in case (though not strictly necessary for hidden divs)
+            lucide.createIcons();
+        }
+
+        // Constants
+        const fullTitle = "사람인, 업무효율 10배 만들기";
+        const typedTitleEl = document.getElementById('typed-title');
+        const clockEl = document.getElementById('clock');
+
+        const fireworksContainer = document.getElementById('fireworks-container');
+
+        // Clock Logic
+        function updateClock() {
+            const now = new Date();
+            clockEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // Typing Logic (Looping)
+        let index = 0;
+        function typeWriter() {
+            if (index < fullTitle.length) {
+                // Update text
+                typedTitleEl.textContent = fullTitle.slice(0, index + 1);
+
+                // Determine delay
+                let delay = 50;
+                // Pause after "사람인" (index 2)
+                if (index === 2) {
+                    delay = 800;
+                }
+                // Pause after "AI" (index 5)
+                else if (index === 5) {
+                    delay = 800;
+                }
+
+                index++;
+                setTimeout(typeWriter, delay);
+            } else {
+                // When finished, wait then reset
+                setTimeout(() => {
+                    index = 0;
+                    typedTitleEl.textContent = '';
+                    typeWriter();
+                }, 3000); // 3 seconds wait before restarting
+            }
+        }
+        // Start typing after initial delay
+        setTimeout(typeWriter, 500);
+
+        // Accordion Logic
+        function toggleAccordion(contentId, btn) {
+            const content = document.getElementById(contentId);
+            const icon = btn.querySelector('.lucide-chevron-down');
+
+            content.classList.toggle('hidden');
+
+            if (content.classList.contains('hidden')) {
+                icon.style.transform = 'rotate(0deg)';
+                btn.classList.remove('bg-black', 'text-white');
+                btn.classList.add('bg-white', 'text-black');
+            } else {
+                icon.style.transform = 'rotate(180deg)';
+                // Optional: Maintain active state style on button
+                // btn.classList.remove('bg-white', 'text-black');
+                // btn.classList.add('bg-black', 'text-white');
+            }
+        }
+
+        // Firework Logic
+        function createFirework() {
+            const x = Math.random() * 90 + 5;
+            const y = Math.random() * 80 + 10;
+
+            // Create particles
+            const particleCount = 12;
+            for (let i = 0; i < particleCount; i++) {
+                const p = document.createElement('div');
+                p.classList.add('firework-particle');
+
+                // Set initial position
+                p.style.left = x + '%';
+                p.style.top = y + '%';
+
+                // Add to container
+                fireworksContainer.appendChild(p);
+
+                // Calculate random destination
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const distance = 40 + Math.random() * 40;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+
+                // Animate
+                const anim = p.animate([
+                    { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                    { transform: `translate(${tx}px, ${ty}px) scale(0)`, opacity: 0 }
+                ], {
+                    duration: 800 + Math.random() * 400,
+                    easing: 'ease-out'
+                });
+
+                // Cleanup
+                anim.onfinish = () => p.remove();
+            }
+        }
+
+        // Random spawner loop
+        function startFireworks() {
+            const delay = 800 + Math.random() * 1500;
+            createFirework();
+            setTimeout(startFireworks, delay);
+        }
+
+        startFireworks();
+
+    </script>
+</body>
+
+</html>
