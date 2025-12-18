@@ -95,8 +95,8 @@
                             class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
                             <i data-lucide="square" class="w-3 h-3"></i>
                         </div>
-                        <div
-                            class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none">
+                        <div class="w-6 h-6 border border-black bg-white shadow-[1px_1px_0_0_#000] flex items-center justify-center cursor-pointer hover:bg-gray-100 active:translate-y-[1px] active:translate-x-[1px] active:shadow-none"
+                            onclick="showRetentionModal()">
                             <i data-lucide="x" class="w-3 h-3"></i>
                         </div>
                     </div>
@@ -216,7 +216,8 @@
                                         <p class="text-sm leading-relaxed pl-1 font-medium">
                                             본 해커톤은 결과물의 완성도보다도 <span
                                                 class="bg-yellow-200 px-1 border-b-2 border-black">AI를 직접
-                                                활용해보고, 가능성을 전파</span>하는 것을 목표로 합니다. <br> 직무와 무관하게 관심 있는 분들은 부담 없이 참여하여 주시기
+                                                활용해보고, 가능성을 전파</span>하는 것을 목표로 합니다. <br> 직무와 무관하게 관심 있는 분들은 부담 없이 참여하여
+                                            주시기
                                             바랍니다.
                                         </p>
                                     </div>
@@ -396,6 +397,35 @@
 
     </div>
 
+    <!-- RETENTION MODAL -->
+    <div id="retention-modal" class="fixed inset-0 z-[100] hidden items-center justify-center">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeRetentionModal()"></div>
+
+        <!-- Modal Content -->
+        <div
+            class="relative bg-white border-2 border-black shadow-[8px_8px_0_0_#000] p-8 max-w-sm w-full mx-4 text-center animate-in fade-in zoom-in duration-200">
+            <!-- Header bar for retro feel -->
+            <div class="absolute top-0 left-0 right-0 h-6 bg-black flex items-center px-2 justify-end">
+                <div class="w-3 h-3 bg-white rounded-full cursor-pointer hover:bg-red-500"
+                    onclick="closeRetentionModal()"></div>
+            </div>
+
+            <div class="mt-10 mb-6">
+                <span class="text-5xl inline-block">🥺</span>
+            </div>
+
+            <h3 class="text-xl font-black tracking-tight mb-6 whitespace-pre-line leading-tight">
+                끄시게요?<br>참여 해주실 거죠?
+            </h3>
+
+            <button onclick="closeRetentionModal()"
+                class="w-full py-3 bg-black text-white font-bold text-lg hover:bg-white hover:text-black border-2 border-black transition-all duration-200 shadow-[4px_4px_0_0_#888] hover:shadow-[2px_2px_0_0_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none">
+                Yes
+            </button>
+        </div>
+    </div>
+
     <!-- Footer / Logo Area (Clean Version) -->
     <footer class="mt-8 text-center">
         <div class="w-32 h-10 flex items-center justify-center p-1 mx-auto">
@@ -448,12 +478,12 @@
 
                 // Determine delay
                 let delay = 50;
-                // Pause after "사람인" (index 2)
-                if (index === 2) {
+                // Pause after "사람인" (index 3)
+                if (index === 3) {
                     delay = 800;
                 }
-                // Pause after "AI" (index 5)
-                else if (index === 5) {
+                // Pause after "업무효율" (index 8)
+                else if (index === 8) {
                     delay = 800;
                 }
 
@@ -537,9 +567,20 @@
 
         startFireworks();
 
+        // Retention Modal Logic
+        const retentionModal = document.getElementById('retention-modal');
+
+        function showRetentionModal() {
+            retentionModal.classList.remove('hidden');
+            retentionModal.classList.add('flex');
+        }
+
+        function closeRetentionModal() {
+            retentionModal.classList.remove('flex');
+            retentionModal.classList.add('hidden');
+        }
+
     </script>
 </body>
 
-
 </html>
-
